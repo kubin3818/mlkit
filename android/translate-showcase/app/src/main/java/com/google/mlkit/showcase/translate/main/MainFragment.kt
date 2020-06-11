@@ -105,23 +105,21 @@ class MainFragment : Fragment() {
         container = view as ConstraintLayout
         viewFinder = container.findViewById(R.id.viewfinder)
 
-        // Request camera permissions
-        if (allPermissionsGranted()) {
-            viewFinder.post { bindCameraUseCases() }
-        } else {
-            requestPermissions(REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
-        }
-
         // Initialize our background executor
         cameraExecutor = Executors.newSingleThreadExecutor()
 
-        // Wait for the views to be properly laid out
-        viewFinder.post {
-            // Keep track of the display in which this view is attached
-            displayId = viewFinder.display.displayId
+        // Request camera permissions
+        if (allPermissionsGranted()) {
+            // Wait for the views to be properly laid out
+            viewFinder.post {
+                // Keep track of the display in which this view is attached
+                displayId = viewFinder.display.displayId
 
-            // Set up the camera and its use cases
-            setUpCamera()
+                // Set up the camera and its use cases
+                setUpCamera()
+            }
+        } else {
+            requestPermissions(REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
         }
 
         // Get available language list and set up the target language spinner
@@ -167,6 +165,28 @@ class MainFragment : Fragment() {
 
         // Every time the orientation of device changes, update rotation for use cases
         displayManager.registerDisplayListener(displayListener, null)
+
+        overlay.apply {
+            setZOrderOnTop(true)
+            holder.setFormat(PixelFormat.TRANSPARENT)
+            holder.addCallback(object : SurfaceHolder.Callback {
+                override fun surfaceChanged(
+                    holder: SurfaceHolder?,
+                    format: Int,
+                    width: Int,
+                    height: Int
+                ) {
+                }
+
+                override fun surfaceDestroyed(holder: SurfaceHolder?) {
+                }
+
+                override fun surfaceCreated(holder: SurfaceHolder?) {
+                    holder?.let { drawOverlay(it) }
+                }
+
+            })
+        }
     }
 
 
