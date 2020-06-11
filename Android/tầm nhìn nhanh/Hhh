@@ -1,0 +1,730 @@
+                                                                       
+
+                                                            
+Lực lượng đặc nhiệm kỹ thuật Internet (IETF) S. Cheshire
+Yêu cầu Nhận xét: 6761 M. Krochmal
+Cập nhật: 1918 , 2606                                            Apple Inc.
+Thể loại: Tiêu chuẩn theo dõi tháng 2 năm 2013
+ISSN: 2070-1721
+
+
+                        Tên miền sử dụng đặc biệt
+
+trừu tượng
+
+   Tài liệu này mô tả ý nghĩa của việc nói rằng Tên miền (DNS
+   tên) được dành riêng cho sử dụng đặc biệt, khi đặt tên như vậy là
+   thích hợp, và các thủ tục để làm như vậy. Nó thiết lập một IANA
+   đăng ký tên miền như vậy và gieo nó với các mục cho một số
+   các tên miền đặc biệt đã được thiết lập.
+
+Trạng thái của bản ghi nhớ này
+
+   Đây là một tài liệu theo dõi tiêu chuẩn Internet.
+
+   Tài liệu này là một sản phẩm của Lực lượng đặc nhiệm Kỹ thuật Internet
+   (IETF). Nó đại diện cho sự đồng thuận của cộng đồng IETF. Nó có
+   nhận được đánh giá công khai và đã được phê duyệt để xuất bản bởi
+   Nhóm chỉ đạo kỹ thuật Internet (IESG). Thông tin thêm về
+   Tiêu chuẩn Internet có sẵn trong Phần 2 của RFC 5741 .
+
+   Thông tin về tình trạng hiện tại của tài liệu này, bất kỳ errata,
+   và làm thế nào để cung cấp thông tin phản hồi về nó có thể được lấy tại
+   http://www.rfc-editor.org/info/rfc6761 .
+
+Thông báo bản quyền
+
+   Bản quyền (c) 2013 IETF Trust và những người được xác định là
+   tác giả tài liệu. Đã đăng ký Bản quyền.
+
+   Tài liệu này tuân theo BCP 78 và Pháp lý của IETF Trust
+   Quy định liên quan đến tài liệu của IETF
+   ( http://trustee.ietf.org/license-info ) có hiệu lực vào ngày
+   xuất bản tài liệu này. Vui lòng xem lại các tài liệu này
+   cẩn thận, vì họ mô tả các quyền và hạn chế của bạn với sự tôn trọng
+   vào tài liệu này. Các thành phần mã được trích xuất từ ​​tài liệu này phải
+   bao gồm văn bản Giấy phép BSD được Đơn giản hóa như được mô tả trong Phần 4.e của
+   Các quy định pháp lý tin cậy và được cung cấp mà không có bảo hành như
+   được mô tả trong Giấy phép BSD được đơn giản hóa.
+
+
+
+
+
+
+Theo dõi tiêu chuẩn Cheshire & Krochmal [Trang 1]
+ 
+RFC 6761                 Tên miền sử dụng đặc biệt Tháng 2 năm 2013
+
+
+1 . Giới thiệu
+
+   Một số địa chỉ IP riêng và dải địa chỉ IP được xử lý
+   đặc biệt bởi việc triển khai mạng và do đó, không
+   thích hợp để sử dụng như địa chỉ unicast. Ví dụ: địa chỉ IPv4
+   224.0.0.0 đến 239.255.255.255 là các địa chỉ multicast [ RFC5735 ], với
+   224.0.0.1 là địa chỉ multicast "tất cả máy chủ" [ RFC1112 ]
+   [ RFC5771 ]. Một ví dụ khác là 127.0.0.1, "máy chủ cục bộ" IPv4
+   địa chỉ [ RFC5735 ].
+
+   Tương tự với các địa chỉ IPv4 được sử dụng đặc biệt [ RFC5735 ], tên miền
+   Hệ thống (DNS) [ RFC1034 ] [RFC1035] có khái niệm riêng dành riêng
+   tên, chẳng hạn như "example.com.", "example.net." và "example.org.", hoặc
+   bất kỳ tên nào thuộc miền giả cấp cao nhất "không hợp lệ".
+   [ RFC2606 ]. Tuy nhiên, "Tên DNS cấp cao nhất dành riêng" [ RFC2606 ] không
+   không nói rõ việc triển khai có được coi là đối xử như vậy không
+   khác nhau, và nếu vậy, theo cách nào.
+
+   Tài liệu này chỉ rõ trong trường hợp nào điều trị đặc biệt là
+   thích hợp, và theo những cách nào.
+
+2 . Thuật ngữ
+
+   Các từ khóa "PHẢI", "PHẢI KHÔNG", "BẮT BUỘC", "SALL", "SALL KHÔNG",
+   "NÊN", "KHÔNG NÊN", "KHUYẾN NGHỊ", "CÓ THỂ" và "TÙY CHỌN" trong việc này
+   tài liệu sẽ được giải thích như được mô tả trong "Từ khóa để sử dụng trong
+   RFC để chỉ ra các mức yêu cầu "[ RFC2119 ].
+
+3 . Khả năng ứng dụng
+
+   Khi IP multicast được tạo [ RFC1112 ], việc triển khai phải được
+   được cập nhật để hiểu địa chỉ IP multicast nghĩa là gì và phải làm gì
+   làm với nó Thêm IP multicast vào ngăn xếp mạng đòi hỏi nhiều hơn
+   thay vì chỉ thêm các mục trong bảng định tuyến đúng cho những mục đó
+   địa chỉ. Hơn nữa, hỗ trợ phát đa hướng IP đòi hỏi một số mức
+   điểm chung phù hợp trên tất cả các máy chủ tuân thủ,
+   độc lập với những mạng mà các máy chủ có thể được kết nối. Trong khi
+   có thể xây dựng một mạng riêng biệt bằng cách sử dụng bất cứ thứ gì
+   địa chỉ IP unicast hợp lệ và cấu trúc liên kết định tuyến người ta chọn
+   (bất kể các địa chỉ IP unicast đó đã được sử dụng chưa
+   bởi các máy chủ khác trên Internet công cộng), địa chỉ multicast IPv4
+   224.0.0.1 luôn là địa chỉ multicast "tất cả máy chủ" và không phải vậy
+   một quyết định của địa phương.
+
+   Tương tự, nếu một tên miền có các thuộc tính đặc biệt ảnh hưởng đến
+   cách triển khai phần cứng và phần mềm xử lý tên, áp dụng
+   phổ biến bất kể mạng thực hiện có thể là gì
+   kết nối với, sau đó tên miền đó có thể là một ứng cử viên để có
+
+
+
+Theo dõi tiêu chuẩn Cheshire & Krochmal [Trang 2]
+ 
+RFC 6761                 Tên miền sử dụng đặc biệt Tháng 2 năm 2013
+
+
+   IETF tuyên bố nó là một tên miền sử dụng đặc biệt và chỉ định những gì
+   thực hiện điều trị đặc biệt nên cung cấp cho tên đó. Trên
+   mặt khác, nếu tuyên bố một tên cụ thể là đặc biệt sẽ dẫn đến
+   không thay đổi đối với bất kỳ triển khai nào, sau đó điều đó cho thấy rằng tên
+   có thể không đặc biệt trong bất kỳ cách vật chất nào, và nó có thể hơn
+   thích hợp sử dụng các cơ chế DNS hiện có [ RFC1034 ] để cung cấp
+   phân quyền, dữ liệu hoặc thiếu dữ liệu mong muốn cho tên trong
+   câu hỏi Trường hợp hành vi mong muốn có thể đạt được thông qua
+   quy trình đăng ký tên miền hiện có, quá trình đó nên được
+   đã sử dụng. Đặt trước một tên miền sử dụng đặc biệt không phải là một cơ chế
+   để phá vỡ các quy trình đăng ký tên miền bình thường.
+
+   Ví dụ, giả sử đã có một tài liệu IETF chỉ định
+   rằng một tên cụ thể (hoặc bộ tên) được đảm bảo để tạo ra một
+   Kết quả NXDOMAIN ("Lỗi tên" [ RFC1035 ]). Một tài liệu như vậy rơi
+   thuộc trách nhiệm của IETF. IETF chịu trách nhiệm
+   quy tắc giao thức. IETF định nghĩa bộ ký tự tên, giới hạn độ dài,
+   cú pháp, thực tế là trong DNS "A" tương đương với "a", v.v.
+   [ RFC1034 ] [ RFC1035 ]. Các phần của không gian tên được tạo bởi những người đó
+   quy tắc được trao cho ICANN để quản lý, nhưng, do DNS được thiết lập
+   quy tắc giao thức, ICANN không được tự do phân bổ "COM" và "com" cho hai
+   máy chủ tên khác nhau. IETF có trách nhiệm chỉ định
+   giao thức DNS hoạt động như thế nào và ICANN chịu trách nhiệm phân bổ
+   các tên được thực hiện bởi giao thức DNS đó. Bây giờ, giả sử một
+   nhà phát triển đã sử dụng tên "không tồn tại được bảo đảm" đặc biệt này,
+   "biết" rằng nó được đảm bảo để trả lại NXDOMAIN và cũng giả sử
+   rằng máy chủ DNS của người dùng không trả lại NXDOMAIN cho tên này.
+   Phần mềm của nhà phát triển sau đó thất bại. Ai làm người dùng và / hoặc
+   Nhà phát triển phàn nàn với? ICANN? IETF? Nhà điều hành máy chủ DNS?
+   Nếu nhà phát triển không thể phụ thuộc vào "không tồn tại được bảo đảm" đặc biệt
+   Tên để luôn trả về NXDOMAIN, sau đó tên đặc biệt là vô giá trị,
+   bởi vì nó không thể dựa vào để làm những gì nó được cho là. Đối với điều này
+   tên "được bảo đảm không tồn tại" đặc biệt để có bất kỳ việc sử dụng, nó phải được
+   được xác định để trả về NXDOMAIN, BY PROTOCOL, cho tất cả các cài đặt, không phải
+   chỉ bằng cách phân bổ ICANN trên Internet công cộng. ICANN không có
+   quyền tài phán đối với cách người dùng chọn định cấu hình DNS riêng của họ
+   các máy chủ trên mạng riêng của họ, nhưng các nhà phát triển cần một giao thức
+   đặc điểm kỹ thuật nói rằng trả về câu trả lời tích cực cho
+   tên "được bảo đảm không tồn tại" đặc biệt là vi phạm giao thức trên
+   * tất cả * mạng, không chỉ Internet công cộng. Do đó, hành động của
+   việc xác định tên đặc biệt như vậy sẽ tạo ra quy tắc giao thức cấp cao hơn,
+   trên quản lý của ICANN về tên có thể phân bổ trên Internet công cộng.
+
+
+
+
+
+
+
+
+
+Theo dõi tiêu chuẩn Cheshire & Krochmal [Trang 3]
+ 
+RFC 6761                 Tên miền sử dụng đặc biệt Tháng 2 năm 2013
+
+
+4 . Thủ tục
+
+   Nếu nó được xác định rằng việc xử lý tên đặc biệt là bắt buộc trong
+   để thực hiện một số chức năng mới mong muốn, sau đó là IETF
+   Đặc điểm kỹ thuật "Hành động tiêu chuẩn" hoặc "Phê duyệt IESG" [ RFC5226 ] PHẢI
+   xuất bản mô tả các chức năng mới.
+
+   Đặc tả PHẢI nêu cách thức triển khai xác định rằng
+   xử lý đặc biệt là cần thiết cho bất kỳ tên nào. Điều này thường
+   được thực hiện bằng cách nói rằng bất kỳ tên miền đủ điều kiện kết thúc bằng một
+   hậu tố nhất định (nghĩa là nằm trong một phụ huynh được chỉ định
+   tên miền) sẽ nhận được các hành vi đặc biệt. Trong thực tế, khắc này
+   tắt một cây con của không gian tên DNS trong đó tên được sửa đổi
+   áp dụng quy tắc điều trị, tương tự như cách IP multicast [ RFC1112 ] hoặc IP
+   địa chỉ liên kết cục bộ [ RFC3927 ] [ RFC4862 ] khắc các khối IP
+   không gian địa chỉ trong đó xử lý địa chỉ sửa đổi tương ứng của họ
+   quy tắc áp dụng.
+
+   Thông số kỹ thuật cũng PHẢI nêu rõ, trong mỗi bảy "Tên miền
+   Cân nhắc đặt phòng "dưới đây, điều trị đặc biệt,
+   nếu có, sẽ được áp dụng. Nếu trong tất cả bảy loại, câu trả lời là
+   "không", sau đó có thể không cần điều trị đặc biệt và yêu cầu
+   bảo lưu một tên miền sử dụng đặc biệt có thể không phù hợp.
+
+5 . Cân nhắc đặt tên miền
+
+   Tài liệu "Hành động tiêu chuẩn" hoặc "Phê duyệt IESG" của IETF chỉ định
+   một số hành vi đặt tên mới, yêu cầu Tên miền sử dụng đặc biệt
+   được bảo lưu để thực hiện hành vi mới mong muốn này, cần phải chứa
+   phần phụ của phần "Cân nhắc IANA" có tiêu đề "Tên miền
+   Cân nhắc đặt phòng "đưa ra câu trả lời trong bảy loại
+   được liệt kê dưới đây. Trong trường hợp tên DNS được tạo theo thuật toán,
+   tài liệu chỉ định cần xác định rõ ràng bộ tên
+   được tạo bởi thuật toán yêu cầu đặc biệt đề xuất
+   sự đối xử.
+
+   1. Người dùng:
+
+       Người dùng có mong đợi nhận ra những cái tên này là đặc biệt và
+       sử dụng chúng khác nhau? Bằng cách nào?
+
+   2. Phần mềm ứng dụng:
+
+       Các nhà văn của phần mềm ứng dụng dự kiến ​​sẽ làm cho họ
+       phần mềm nhận ra những cái tên này là đặc biệt và coi chúng
+       khác nhau? Bằng cách nào? (Ví dụ: nếu người dùng vào
+       tên như vậy, nếu phần mềm ứng dụng từ chối nó với một
+       thông báo lỗi?)
+
+
+
+Theo dõi tiêu chuẩn Cheshire & Krochmal [Trang 4]
+ 
+RFC 6761                 Tên miền sử dụng đặc biệt Tháng 2 năm 2013
+
+
+   3. Tên API và thư viện phân giải:
+
+       Là người viết các API và thư viện phân giải tên dự kiến
+       làm cho phần mềm của họ nhận ra những cái tên này là đặc biệt và coi
+       chúng khác nhau? Nếu vậy thì thế nào?
+
+   4. Máy chủ bộ đệm DNS:
+
+       Các nhà phát triển của máy chủ tên miền lưu trữ dự kiến ​​sẽ thực hiện
+       triển khai của họ công nhận những tên này là đặc biệt và đối xử
+       chúng khác nhau? Nếu vậy thì thế nào?
+
+   5. Máy chủ DNS có thẩm quyền:
+
+       Là nhà phát triển của máy chủ tên miền có thẩm quyền dự kiến
+       làm cho việc triển khai của họ nhận ra những cái tên này là đặc biệt và
+       đối xử với họ khác nhau? Nếu vậy thì thế nào?
+
+   6. Người vận hành máy chủ DNS:
+
+       Tên miền sử dụng đặc biệt này có tiềm năng nào không
+       tác động đến các nhà khai thác máy chủ DNS? Nếu họ cố gắng cấu hình
+       máy chủ DNS có thẩm quyền là có thẩm quyền cho tên dành riêng này,
+       phần mềm máy chủ tên tuân thủ sẽ từ chối nó là không hợp lệ? Làm DNS
+       Người vận hành máy chủ cần biết về điều đó và hiểu tại sao?
+       Ngay cả khi phần mềm máy chủ tên không ngăn họ sử dụng
+       tên dành riêng này, có những cách khác mà nó có thể không hoạt động như
+       dự kiến, trong đó các nhà điều hành máy chủ DNS nên được nhận thức?
+
+   7. Đăng ký / Đăng ký DNS:
+
+       DNS Đăng ký / Đăng ký nên xử lý các yêu cầu như thế nào để đăng ký
+       tên miền dành riêng này? Có nên từ chối những yêu cầu như vậy?
+       Nếu các yêu cầu như vậy được cho phép, nhưng chỉ với một đặc biệt-
+       thực thể được chỉ định? (Ví dụ: tên "www.example.org" là
+       dành riêng cho các ví dụ tài liệu và không có sẵn cho
+       đăng ký; tuy nhiên, tên trên thực tế đã được đăng ký; với chỗ ấy
+       thậm chí là một trang web có tên đó, trong đó tuyên bố rằng
+       Tên được dành riêng để sử dụng trong tài liệu và không thể được
+       đã đăng ký!)
+
+
+
+
+
+
+
+
+
+
+
+Theo dõi tiêu chuẩn Cheshire & Krochmal [Trang 5]
+ 
+RFC 6761                 Tên miền sử dụng đặc biệt Tháng 2 năm 2013
+
+
+6 . Đăng ký ban đầu
+
+   Sổ đăng ký "Tên miền sử dụng đặc biệt" ban đầu của IANA sẽ chứa
+   các mục nhập cho miền ánh xạ ngược địa chỉ riêng [ RFC1918 ] và
+   cho các tên DNS cấp cao nhất dành riêng hiện có [ RFC2606 ].
+
+6.1 . Cân nhắc đặt tên miền cho địa chỉ riêng
+
+   Các miền ánh xạ ngược địa chỉ riêng [ RFC1918 ] được liệt kê bên dưới,
+   và bất kỳ tên nào thuộc các tên miền đó, đều là Tên miền sử dụng đặc biệt
+   Tên:
+
+     10.in-addr.arpa. 21.172.in-addr.arpa. 26.172.in-addr.arpa.
+     16.172.in-addr.arpa. 22.172.in-addr.arpa. 27.172.in-addr.arpa.
+     17.172.in-addr.arpa. 30.172.in-addr.arpa. 28.172.in-addr.arpa.
+     18.172.in-addr.arpa. 23.172.in-addr.arpa. 29.172.in-addr.arpa.
+     19.172.in-addr.arpa. 24.172.in-addr.arpa. 31.172.in-addr.arpa.
+     20.172.in-addr.arpa. 25.172.in-addr.arpa. 168.192.in-addr.arpa.
+
+   Những tên miền này và bất kỳ tên nào thuộc các tên miền này, là
+   đặc biệt theo những cách sau:
+
+   1. Người dùng có thể tự do sử dụng những tên này như bất kỳ tên nào khác
+       tên ánh xạ ngược. Tuy nhiên, vì không có trung tâm
+       thẩm quyền chịu trách nhiệm sử dụng địa chỉ riêng, người dùng NÊN
+       lưu ý rằng những tên này có khả năng mang lại kết quả khác nhau
+       trên các mạng khác nhau.
+
+   2. Phần mềm ứng dụng KHÔNG NÊN nhận ra những tên này là đặc biệt,
+       và NÊN sử dụng các tên này vì chúng sẽ ánh xạ ngược khác
+       tên.
+
+   3. API và thư viện phân giải tên KHÔNG NÊN nhận ra chúng
+       tên là đặc biệt và KHÔNG NÊN đối xử với họ khác nhau. Tên
+       API độ phân giải NÊN gửi truy vấn cho các tên này đến chúng
+       cấu hình bộ đệm máy chủ DNS (s).
+
+   4. Máy chủ bộ đệm DNS NÊN nhận ra những tên này là đặc biệt và
+       Theo mặc định, KHÔNG NÊN cố gắng tra cứu các bản ghi NS cho chúng,
+       hoặc truy vấn các máy chủ DNS có thẩm quyền khác để cố gắng
+       giải quyết những tên này. Thay vào đó, bộ nhớ cache máy chủ DNS NÊN, bởi
+       mặc định, tạo phản hồi ngay lập tức (tích cực hoặc tiêu cực) cho
+       tất cả các truy vấn như vậy. Điều này là để tránh tải không cần thiết trên thư mục gốc
+       máy chủ tên và máy chủ tên khác. Bộ nhớ cache DNS máy chủ NÊN
+       cung cấp tùy chọn cấu hình (bị tắt theo mặc định) để bật
+       độ phân giải ngược dòng của các tên đó, để sử dụng trong các mạng riêng
+       trong đó tên ánh xạ ngược địa chỉ riêng được biết là
+       được xử lý bởi một máy chủ DNS có thẩm quyền trong mạng riêng.
+
+
+
+Theo dõi tiêu chuẩn Cheshire & Krochmal [Trang 6]
+ 
+RFC 6761                 Tên miền sử dụng đặc biệt Tháng 2 năm 2013
+
+
+   5. Máy chủ DNS có thẩm quyền NÊN nhận ra những tên này là đặc biệt
+       và NÊN, theo mặc định, tạo phản hồi tiêu cực ngay lập tức cho
+       tất cả các truy vấn như vậy, trừ khi được cấu hình rõ ràng bởi
+       quản trị viên đưa ra câu trả lời tích cực cho địa chỉ riêng
+       tên ánh xạ ngược.
+
+   6. Các nhà khai thác máy chủ DNS NÊN, nếu họ đang sử dụng địa chỉ riêng tư,
+       cấu hình máy chủ DNS có thẩm quyền của họ để hoạt động như có thẩm quyền
+       cho những cái tên này
+
+   7. Đăng ký / Đăng ký DNS KHÔNG PHẢI cấp các yêu cầu để đăng ký bất kỳ
+       của những tên này theo cách thông thường cho bất kỳ người hoặc thực thể. Những
+       Tên được dành riêng để sử dụng trong các mạng riêng và nằm ngoài
+       bộ tên có sẵn để phân bổ theo đăng ký /
+       đăng ký. Cố gắng phân bổ một trong những tên này như thể nó
+       là một tên miền DNS bình thường có thể sẽ không hoạt động như mong muốn,
+       vì lý do 4, 5 và 6 ở trên.
+
+6.2 . Cân nhắc đặt trước tên miền cho "thử nghiệm."
+
+   Tên miền "test." Và bất kỳ tên nào nằm trong ".test.", Là
+   đặc biệt theo những cách sau:
+
+   1. Người dùng có thể tự do sử dụng các tên thử nghiệm này như bất kỳ tên nào khác
+       Tên miền. Tuy nhiên, vì không có cơ quan trung ương
+       chịu trách nhiệm về việc sử dụng tên thử nghiệm, người dùng NÊN lưu ý rằng
+       những cái tên này có khả năng mang lại kết quả khác nhau trên khác nhau
+       mạng.
+
+   2. Phần mềm ứng dụng KHÔNG NÊN nhận ra tên thử nghiệm là đặc biệt,
+       và NÊN sử dụng tên thử nghiệm như tên miền khác.
+
+   3. API và thư viện phân giải tên KHÔNG NÊN nhận ra thử nghiệm
+       tên là đặc biệt và KHÔNG NÊN đối xử với họ khác nhau. Tên
+       API độ phân giải NÊN gửi truy vấn cho tên thử nghiệm đến
+       cấu hình bộ đệm máy chủ DNS (s).
+
+   4. Máy chủ DNS lưu trữ NÊN nhận ra tên thử nghiệm là đặc biệt và
+       Theo mặc định, KHÔNG NÊN cố gắng tra cứu các bản ghi NS cho chúng,
+       hoặc truy vấn các máy chủ DNS có thẩm quyền khác để cố gắng
+       giải quyết tên thử nghiệm. Thay vào đó, bộ nhớ cache máy chủ DNS NÊN, bởi
+       mặc định, tạo phản hồi tiêu cực ngay lập tức cho tất cả như vậy
+       truy vấn. Điều này là để tránh tải không cần thiết vào tên gốc
+       máy chủ và máy chủ tên khác. Máy chủ bộ đệm DNS NÊN cung cấp
+       một tùy chọn cấu hình (bị tắt theo mặc định) để cho phép ngược dòng
+       phân giải tên thử nghiệm, để sử dụng trong các mạng có tên thử nghiệm
+       được biết là được xử lý bởi một máy chủ DNS có thẩm quyền cho biết
+       Mạng riêng tư.
+
+
+
+Theo dõi tiêu chuẩn Cheshire & Krochmal [Trang 7]
+ 
+RFC 6761                 Tên miền sử dụng đặc biệt Tháng 2 năm 2013
+
+
+   5. Máy chủ DNS có thẩm quyền NÊN nhận ra tên thử nghiệm là đặc biệt
+       và NÊN, theo mặc định, tạo phản hồi tiêu cực ngay lập tức cho
+       tất cả các truy vấn như vậy, trừ khi được cấu hình rõ ràng bởi
+       quản trị viên để đưa ra câu trả lời tích cực cho tên thử nghiệm.
+
+   6. Các nhà khai thác máy chủ DNS NÊN, nếu họ đang sử dụng tên thử nghiệm,
+       cấu hình máy chủ DNS có thẩm quyền của họ để hoạt động như có thẩm quyền
+       cho tên thử nghiệm.
+
+   7. Đăng ký / Đăng ký DNS KHÔNG được cấp yêu cầu đăng ký
+       kiểm tra tên theo cách thông thường cho bất kỳ người hoặc thực thể. Tên kiểm tra
+       được dành riêng để sử dụng trong các mạng riêng và nằm ngoài bộ
+       tên có sẵn để phân bổ bởi đăng ký / đăng ký.
+       Cố gắng phân bổ tên thử nghiệm như thể đó là một DNS bình thường
+       tên miền có thể sẽ không hoạt động như mong muốn, vì lý do 4, 5,
+       và 6 ở trên.
+
+6.3 . Cân nhắc đặt trước tên miền cho "localhost."
+
+   Tên miền "localhost." và bất kỳ tên nào nằm trong ".localhost."
+   đặc biệt theo những cách sau:
+
+   1. Người dùng có thể tự do sử dụng tên localhost như bất kỳ tên nào khác
+       Tên miền. Người dùng có thể cho rằng địa chỉ IPv4 và IPv6
+       truy vấn cho tên localhost sẽ luôn giải quyết tương ứng
+       Địa chỉ loopback IP.
+
+   2. Phần mềm ứng dụng CÓ THỂ nhận ra tên localhost là đặc biệt hoặc
+       CÓ THỂ chuyển chúng sang API độ phân giải như cách khác
+       Tên miền.
+
+   3. API và thư viện phân giải tên NÊN nhận ra localhost
+       tên là đặc biệt và NÊN luôn trả về địa chỉ loopback IP
+       cho các truy vấn địa chỉ và phản hồi tiêu cực cho tất cả các truy vấn khác
+       các loại. API phân giải tên KHÔNG NÊN gửi truy vấn cho
+       tên localhost đến (các) máy chủ bộ nhớ cache được cấu hình của chúng.
+
+   4. Máy chủ bộ đệm DNS NÊN nhận ra tên localhost là đặc biệt
+       và KHÔNG NÊN tìm kiếm hồ sơ NS cho họ, hoặc
+       mặt khác truy vấn các máy chủ DNS có thẩm quyền trong một nỗ lực để
+       giải quyết tên localhost. Thay vào đó, bộ nhớ cache máy chủ DNS NÊN,
+       cho tất cả các truy vấn địa chỉ như vậy, tạo ra một tích cực ngay lập tức
+       phản hồi đưa ra địa chỉ loopback IP và cho tất cả các truy vấn khác
+       các loại, tạo ra một phản ứng tiêu cực ngay lập tức. Điều này là để tránh
+       tải không cần thiết trên các máy chủ tên gốc và các máy chủ tên khác.
+
+
+
+
+
+
+Theo dõi tiêu chuẩn Cheshire & Krochmal [Trang 8]
+ 
+RFC 6761                 Tên miền sử dụng đặc biệt Tháng 2 năm 2013
+
+
+   5. Máy chủ DNS có thẩm quyền NÊN nhận ra tên localhost là
+       đặc biệt và xử lý chúng như được mô tả ở trên để lưu trữ DNS
+       may chủ.
+
+   6. Các nhà khai thác máy chủ DNS NÊN biết rằng RDATA hiệu quả cho
+       Tên localhost được xác định bởi đặc tả giao thức và không thể
+       được sửa đổi bởi cấu hình cục bộ.
+
+   7. Đăng ký / Đăng ký DNS KHÔNG được cấp yêu cầu đăng ký
+       tên localhost theo cách thông thường cho bất kỳ cá nhân hoặc tổ chức.
+       Tên Localhost được xác định bởi đặc tả giao thức và mùa thu
+       bên ngoài tập hợp các tên có sẵn để phân bổ bởi đăng ký /
+       đăng ký. Cố gắng phân bổ một tên localhost như thể nó
+       là một tên miền DNS bình thường có thể sẽ không hoạt động như mong muốn,
+       vì lý do 2, 3, 4 và 5 ở trên.
+
+6.4 . Cân nhắc đặt trước tên miền cho "không hợp lệ."
+
+   Tên miền "không hợp lệ." và bất kỳ tên nào nằm trong ".invalid." Chúng tôi
+   đặc biệt theo những cách được liệt kê dưới đây. Trong văn bản dưới đây, thuật ngữ
+   "không hợp lệ" được sử dụng trong dấu ngoặc kép để biểu thị những tên đó, trái ngược với
+   tên có thể không hợp lệ vì lý do khác (ví dụ, quá dài).
+
+   1. Người dùng có thể tự do sử dụng tên "không hợp lệ" như bất kỳ tên nào khác
+       Tên miền. Người dùng CÓ THỂ cho rằng các truy vấn cho tên "không hợp lệ"
+       sẽ luôn trả về các phản hồi NXDOMAIN.
+
+   2. Phần mềm ứng dụng CÓ THỂ nhận ra tên "không hợp lệ" là đặc biệt hoặc
+       CÓ THỂ chuyển chúng sang API độ phân giải như cách khác
+       Tên miền.
+
+   3. API và thư viện phân giải tên NÊN nhận ra "không hợp lệ"
+       tên là đặc biệt và NÊN luôn trả lại tiêu cực ngay lập tức
+       phản ứng. API phân giải tên KHÔNG NÊN gửi truy vấn cho
+       Tên "không hợp lệ" đối với (các) máy chủ bộ đệm ẩn được định cấu hình của chúng.
+
+   4. Máy chủ bộ đệm DNS NÊN nhận ra tên "không hợp lệ" là đặc biệt
+       và KHÔNG NÊN tìm kiếm hồ sơ NS cho họ, hoặc
+       mặt khác truy vấn các máy chủ DNS có thẩm quyền trong một nỗ lực để
+       giải quyết tên "không hợp lệ". Thay vào đó, bộ nhớ cache máy chủ DNS NÊN
+       tạo phản hồi NXDOMAIN ngay lập tức cho tất cả các truy vấn đó. Điều này
+       là để tránh tải không cần thiết trên các máy chủ tên gốc và khác
+       tên máy chủ.
+
+   5. Máy chủ DNS có thẩm quyền NÊN nhận ra tên "không hợp lệ" là
+       đặc biệt và xử lý chúng như được mô tả ở trên để lưu trữ DNS
+       may chủ.
+
+
+
+
+Theo dõi tiêu chuẩn Cheshire & Krochmal [Trang 9]
+ 
+RFC 6761                 Tên miền sử dụng đặc biệt Tháng 2 năm 2013
+
+
+   6. Các nhà khai thác máy chủ DNS NÊN biết rằng RDATA hiệu quả cho
+       Tên "không hợp lệ" được xác định bởi đặc tả giao thức là
+       không tồn tại và không thể được sửa đổi bởi cấu hình cục bộ.
+
+   7. Đăng ký / Đăng ký DNS KHÔNG được cấp yêu cầu đăng ký
+       Tên "không hợp lệ" theo cách thông thường cho bất kỳ cá nhân hoặc tổ chức. Những
+       Tên "không hợp lệ" được xác định bởi đặc tả giao thức là
+       không tồn tại và chúng nằm ngoài nhóm tên có sẵn cho
+       phân bổ bởi đăng ký / đăng ký. Cố gắng phân bổ một
+       Tên "không hợp lệ" như thể đó là một tên miền DNS bình thường sẽ
+       có thể không hoạt động như mong muốn, vì lý do 2, 3, 4 và 5 ở trên.
+
+6.5 . Cân nhắc đặt tên miền cho tên miền ví dụ
+
+   Các tên miền "ví dụ.", "Example.com.", "Example.net.",
+   "example.org." và bất kỳ tên nào thuộc các tên miền đó, đều
+   đặc biệt theo những cách sau:
+
+   1. Người dùng NÊN hiểu rằng tên ví dụ được dành riêng để sử dụng
+       trong tài liệu.
+
+   2. Phần mềm ứng dụng KHÔNG NÊN nhận ra tên ví dụ là
+       đặc biệt và NÊN sử dụng tên ví dụ như tên miền khác
+       tên.
+
+   3. API và thư viện phân giải tên KHÔNG NÊN nhận ra ví dụ
+       tên là đặc biệt và KHÔNG NÊN đối xử với họ khác nhau. Tên
+       API độ phân giải NÊN gửi truy vấn cho tên ví dụ đến
+       cấu hình bộ đệm máy chủ DNS (s).
+
+   4. Máy chủ bộ đệm DNS KHÔNG NÊN nhận ra tên ví dụ là đặc biệt
+       và NÊN giải quyết chúng bình thường.
+
+   5. Máy chủ DNS có thẩm quyền KHÔNG NÊN nhận ra tên ví dụ là
+       đặc biệt.
+
+   6. Người vận hành máy chủ DNS NÊN biết rằng tên ví dụ là
+       dành riêng để sử dụng trong tài liệu.
+
+   7. Đăng ký / Đăng ký DNS KHÔNG được cấp yêu cầu đăng ký
+       tên ví dụ theo cách thông thường cho bất kỳ người hoặc thực thể. Tất cả
+       tên ví dụ được đăng ký vĩnh viễn cho IANA:
+
+
+
+
+
+
+
+
+
+Theo dõi tiêu chuẩn Cheshire & Krochmal [Trang 10]
+ 
+RFC 6761                 Tên miền sử dụng đặc biệt Tháng 2 năm 2013
+
+
+        Tên miền: EXAMPLE.COM
+        Nhà đăng ký: TÀI KHOẢN ĐƯỢC CẤP PHÉP-INTERNET
+        Máy chủ Whois: whois.iana.org
+        URL giới thiệu: http://res-dom.iana.org
+        Tên máy chủ: A.IANA-SERVERS.NET
+        Tên máy chủ: B.IANA-SERVERS.NET
+        Tình trạng: clientDeletePro cấm
+        Tình trạng: clientTransferPro cấm
+        Tình trạng: clientUpdatePro cấm
+        Ngày cập nhật: 26 tháng 3 năm 2004
+        Ngày tạo: 14-aug-1995
+        Ngày hết hạn: 13 tháng 8 năm 2011
+
+   IANA hiện đang duy trì một máy chủ web cung cấp một trang web giải thích
+   mục đích của tên miền ví dụ.
+
+7 . Cân nhắc về Bảo mật
+
+   Tài liệu này phác thảo các trường hợp đặt trước một tên miền
+   Tên cho sử dụng đặc biệt là phù hợp, và thủ tục để có
+   Tên miền sử dụng đặc biệt được ghi lại bởi IANA. Bất kỳ tài liệu
+   yêu cầu một tên miền sử dụng đặc biệt như vậy cần có một
+   phần "Cân nhắc bảo mật" thích hợp mô tả bất kỳ
+   vấn đề bảo mật liên quan đến việc sử dụng đặc biệt đó.
+
+8 . Cân nhắc của IANA
+
+   IANA đã tạo một sổ đăng ký mới về Tên miền sử dụng đặc biệt,
+   ban đầu được điền với các miền ánh xạ ngược địa chỉ riêng
+   và Tên DNS cấp cao nhất dành riêng được nêu ở trên trong Phần 6 .
+
+   Khi IANA nhận được yêu cầu ghi lại "Miền sử dụng đặc biệt" mới
+   Tên ", cần xác minh, với sự tư vấn của IESG, rằng IETF
+   Tài liệu "Hành động tiêu chuẩn" hoặc "Phê duyệt IESG" [ RFC5226 ] bao gồm
+   yêu cầu phần "Cân nhắc đặt trước tên miền" nêu rõ cách thức
+   ý nghĩa đặc biệt của tên này ảnh hưởng đến hành vi của phần cứng,
+   phần mềm và con người trong bảy loại. Nếu IANA và IESG
+   xác định rằng việc xử lý đặc biệt của "Tên miền sử dụng đặc biệt" này là
+   thích hợp, IANA nên ghi lại Tên miền sử dụng đặc biệt và
+   tham chiếu đến đặc tả tài liệu đó, trong sổ đăng ký.
+
+
+
+
+
+
+
+
+
+
+
+Theo dõi tiêu chuẩn Cheshire & Krochmal [Trang 11]
+ 
+RFC 6761                 Tên miền sử dụng đặc biệt Tháng 2 năm 2013
+
+
+9 . Người giới thiệu
+
+9.1 . Tài liệu tham khảo tiêu chuẩn
+
+   [ RFC2119 ] Bradner, S., "Từ khóa để sử dụng trong RFC để chỉ ra
+              Mức yêu cầu ", BCP 14 , RFC 2119 , tháng 3 năm 1997.
+
+   [ RFC1034 ] Mockapetris, P., "Tên miền - khái niệm và phương tiện",
+              STD 13, RFC 1034 , tháng 11 năm 1987.
+
+   [ RFC1035 ] Mockapetris, P., "Tên miền - triển khai và
+              đặc điểm kỹ thuật ", STD 13, RFC 1035 , tháng 11 năm 1987.
+
+   [ RFC5226 ] Narten, T. và H. Alvestrand, "Hướng dẫn viết một
+              Phần cân nhắc của IANA trong RFC ", BCP 26 , RFC 5226 ,
+              Tháng 5 năm 2008.
+
+9.2 . Tài liệu tham khảo thông tin
+
+   [ RFC1112 ] Deering, S., "Tiện ích mở rộng máy chủ cho đa tuyến IP", STD 5,
+               RFC 1112 , tháng 8 năm 1989.
+
+   [ RFC1918 ] Rekhter, Y., Moskowitz, R., Karrenberg, D., Groot, G., và
+              E. Lear, "Phân bổ địa chỉ cho các cá nhân quốc tế",
+              BCP 5 , RFC 1918 , tháng 2 năm 1996.
+
+   [ RFC2606 ] Eastlake, D. và A. Panitz, "DNS cấp cao nhất dành riêng
+              Tên ", BCP 32 , RFC 2606 , tháng 6 năm 1999.
+
+   [ RFC3927 ] Cheshire, S., Aboba, B. và E. Guttman, "Năng động
+              Cấu hình địa chỉ liên kết cục bộ IPv4 ", RFC 3927 ,
+              Tháng 5/2005.
+
+   [ RFC4862 ] Thomson, S., Narten, T. và T. Jinmei, "IPv6 không quốc tịch
+              Định cấu hình tự động địa chỉ ", RFC 4862 , tháng 9 năm 2007.
+
+   [ RFC5735 ] Cotton, M. và L. Vegoda, "Địa chỉ IPv4 sử dụng đặc biệt",
+               BCP 153 , RFC 5735 , tháng 1 năm 2010.
+
+   [ RFC5771 ] Cotton, M., Vegoda, L. và D. Meyer, "Hướng dẫn của IANA cho
+              Bài tập địa chỉ đa tuyến của IPv4 ", BCP 51 , RFC 5771 ,
+              Tháng 3 năm 2010.
+
+
+
+
+
+
+
+
+
+Theo dõi tiêu chuẩn Cheshire & Krochmal [Trang 12]
+ 
+RFC 6761                 Tên miền sử dụng đặc biệt Tháng 2 năm 2013
+
+
+Địa chỉ của tác giả
+
+   Stuart Cheshire
+   Apple Inc.
+   1 vòng lặp vô hạn
+   Cupertino, CA 95014
+   Hoa Kỳ
+
+   Điện thoại: +1 408 974 3207
+   Email: cheshire@apple.com
+
+
+   Marc Krochmal
+   Apple Inc.
+   1 vòng lặp vô hạn
+   Cupertino, CA 95014
+   Hoa Kỳ
+
+   Điện thoại: +1 408 974 4368
+   Email: marc@apple.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Theo dõi tiêu chuẩn Cheshire & Krochmal [Trang 13]
+
+
+Đánh dấu Html được sản xuất bởi rfcmarkup 1.129d, có sẵn từ https://tools.ietf.org/tools/rfcmarkup/
